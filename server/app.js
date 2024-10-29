@@ -1,14 +1,30 @@
-// server/app.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = require('./db');
+const path = require('path')
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+
+const buildpath = path.join(__dirname, "../hotelReservation");
+
+app.use(express.static(buildpath));
+
+app.get("/*", function(req, res){
+        res.sendFile(path.join(__dirname, "index.html"),
+                function(err){
+                        if (err) {
+                                res.status(500).send(err);
+                        }
+                }
+        );
+}
+);
+
 
 // Route to get available rooms
 app.get('/rooms', (req, res) => {
